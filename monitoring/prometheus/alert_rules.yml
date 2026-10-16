@@ -1,0 +1,56 @@
+# ==============================================================================
+# PROMETHEUS ALERTING RULES
+# ==============================================================================
+
+groups:
+  - name: hotel_system_alerts
+    rules:
+      # Cảnh báo 1: Một dịch vụ trong hệ thống bị gián đoạn (Down)
+      - alert: ServiceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Dịch vụ {{ $labels.job }} đang không hoạt động"
+          description: "Target {{ $labels.instance }} thuộc job {{ $labels.job }} đã mất kết nối trong hơn 30 giây."
+
+      # Cảnh báo 2: Thời gian phản hồi API Backend quá chậm (> 1s)
+      - alert: ApiHighLatency
+        expr: histogram_quantile(0.95, sum(rate(hotel_http_request_duration_seconds_bucket[5m])) by (le)) > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Độ trễ API Backend cao"
+          description: "95% request API của khách sạn mất hơn 1 giây để xử lý trong 5 phút qua."
+
+      # Cảnh báo 3: Tỷ lệ lỗi HTTP 5xx vượt quá 5%
+      - alert: ApiHighErrorRate
+        expr: sum(rate(hotel_http_requests_total{status_code=~"5.."}[5m])) / sum(rate(hotel_http_requests_total[5m])) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Tỷ lệ lỗi 5xx của API khách sạn tăng cao"
+          description: "Hơn 5% các yêu cầu gửi đến backend bị lỗi máy chủ nội bộ (5xx)."
+
+      # Cảnh báo 4: PostgreSQL quá tải kết nối (> 80%)
+      - alert: PostgresHighConnections
+        expr: pg_stat_database_numbackends{datname="hotel_booking_db"} > 16
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cơ sở dữ liệu PostgreSQL sắp đầy kết nối"
+          description: "Số lượng kết nối đang mở vào CSDL hotel_booking_db vượt quá 80% ngưỡng cho phép."
+
+      # Cảnh báo 5: Nginx Active Connections cao
+      - alert: NginxHighConnections
+        expr: nginx_connections_active > 500
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Lưu lượng truy cập Nginx tăng đột biến"
+          description: "Nginx đang xử lý hơn 500 kết nối hoạt động liên tục."

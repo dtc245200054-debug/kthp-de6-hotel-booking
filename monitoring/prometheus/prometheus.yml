@@ -1,0 +1,66 @@
+# ==============================================================================
+# PROMETHEUS CONFIGURATION
+# Học phần: Triển khai và Quản trị Hệ thống Phần mềm (Đề 6)
+# ==============================================================================
+
+global:
+  scrape_interval: 10s       # Chu kỳ thu thập metrics mỗi 10 giây
+  evaluation_interval: 10s   # Chu kỳ đánh giá quy tắc cảnh báo (Alert Rules)
+  scrape_timeout: 8s
+
+# Nạp quy tắc cảnh báo
+rule_files:
+  - "/etc/prometheus/alert_rules.yml"
+
+# Danh sách các dịch vụ cần cào dữ liệu (Scrape Jobs)
+scrape_configs:
+  # 1. Prometheus Tự Giám Sát
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # 2. Backend Khách Sạn (Node.js + Express prom-client)
+  - job_name: "hotel-backend"
+    metrics_path: "/metrics"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["backend:5000"]
+        labels:
+          environment: "production"
+          service: "hotel-api"
+
+  # 3. PostgreSQL Database Exporter
+  - job_name: "postgres-exporter"
+    scrape_interval: 10s
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+        labels:
+          environment: "production"
+          service: "postgres-db"
+
+  # 4. Nginx Reverse Proxy Exporter
+  - job_name: "nginx-exporter"
+    scrape_interval: 10s
+    static_configs:
+      - targets: ["nginx-exporter:9113"]
+        labels:
+          environment: "production"
+          service: "nginx-proxy"
+
+  # 5. cAdvisor Container Metrics
+  - job_name: "cadvisor"
+    scrape_interval: 10s
+    static_configs:
+      - targets: ["cadvisor:8080"]
+        labels:
+          environment: "production"
+          service: "docker-containers"
+
+  # 6. Node Exporter Host OS Metrics
+  - job_name: "node-exporter"
+    scrape_interval: 10s
+    static_configs:
+      - targets: ["node-exporter:9100"]
+        labels:
+          environment: "production"
+          service: "host-system"
