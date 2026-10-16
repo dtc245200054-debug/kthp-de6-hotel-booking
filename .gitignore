@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Production builds
+dist/
+build/
+
+# Environment files
+.env
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database Backups & Persistent volumes local
+backups/*.sql
+pgdata/
+pgadmin_data/
+prometheus_data/
+grafana_data/
+loki_data/
+nginx_logs/
+
+# SSL Certificates & Private Keys (Security Hardening)
+*.key
+*.pem
+*.crt
+nginx/certs/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,362 @@
+# ==============================================================================
+# HỆ THỐNG ĐẶT PHÒNG KHÁCH SẠN - DOCKER COMPOSE TOÀN DIỆN
+# Học phần: Triển khai và Quản trị Hệ thống Phần mềm (Đề 6)
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. CƠ SỞ DỮ LIỆU POSTGRESQL 16
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: hotel_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-hotel_booking_db}
+      POSTGRES_USER: ${POSTGRES_USER:-hotel_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-HotelSecurePassword2026!}
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hotel_admin} -d ${POSTGRES_DB:-hotel_booking_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - hotel-backend-net
+
+  # ----------------------------------------------------------------------------
+  # 2. BACKEND API (NODE.JS + EXPRESS + PROM-CLIENT)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hotel_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      BACKEND_PORT: 5000
+      POSTGRES_HOST: postgres
+      POSTGRES_INTERNAL_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-hotel_booking_db}
+      POSTGRES_USER: ${POSTGRES_USER:-hotel_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-HotelSecurePassword2026!}
+      JWT_SECRET: ${JWT_SECRET:-super_secret_hotel_jwt_key_2026}
+      TZ: Asia/Ho_Chi_Minh
+    volumes:
+      - backend_logs:/var/log/backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: 384M
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - hotel-frontend-net
+      - hotel-backend-net
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 3. FRONTEND (REACT + VITE + NGINX SPA RUNTIME)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hotel_frontend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - hotel-frontend-net
+
+  # ----------------------------------------------------------------------------
+  # 4. NGINX REVERSE PROXY & METRICS STUB STATUS
+  # ----------------------------------------------------------------------------
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: hotel_nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${NGINX_STATUS_PORT:-8089}:8080"
+    volumes:
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/stub_status || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - hotel-frontend-net
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 5. QUẢN LÝ DATABASE PGADMIN 4
+  # ----------------------------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4:8.12
+    container_name: hotel_pgadmin
+    restart: unless-stopped
+    ports:
+      - "${PGADMIN_PORT:-8082}:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@hotel.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-AdminSecure2026!}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hotel-backend-net
+
+  # ----------------------------------------------------------------------------
+  # 6. HỆ THỐNG GIÁM SÁT PROMETHEUS
+  # ----------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: hotel_prometheus
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.6'
+          memory: 384M
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 7. TRỰC QUAN HÓA GRAFANA (PRE-PROVISIONED DASHBOARDS)
+  # ----------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: hotel_grafana
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/dashboards/hotel-overview-dashboard.json"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.6'
+          memory: 384M
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 8. THU THẬP LOG TẬP TRUNG GRAFANA LOKI
+  # ----------------------------------------------------------------------------
+  loki:
+    image: grafana/loki:3.1.1
+    container_name: hotel_loki
+    restart: unless-stopped
+    ports:
+      - "${LOKI_PORT:-3101}:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./logging/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 9. ĐẨY LOG PROMTAIL
+  # ----------------------------------------------------------------------------
+  promtail:
+    image: grafana/promtail:3.1.1
+    container_name: hotel_promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./logging/promtail/promtail-config.yaml:/etc/promtail/config.yml:ro
+      - nginx_logs:/var/log/nginx:ro
+      - backend_logs:/var/log/backend:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 10. METRICS CONTAINERS CADVISOR
+  # ----------------------------------------------------------------------------
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: hotel_cadvisor
+    restart: unless-stopped
+    ports:
+      - "${CADVISOR_PORT:-8085}:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 11. METRICS HỆ ĐIỀU HÀNH HOST NODE EXPORTER
+  # ----------------------------------------------------------------------------
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: hotel_node_exporter
+    restart: unless-stopped
+    ports:
+      - "${NODE_EXPORTER_PORT:-9100}:9100"
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 12. METRICS NGINX PROMETHEUS EXPORTER
+  # ----------------------------------------------------------------------------
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.3.0
+    container_name: hotel_nginx_exporter
+    restart: unless-stopped
+    ports:
+      - "${NGINX_EXPORTER_PORT:-9113}:9113"
+    command:
+      - "-nginx.scrape-uri=http://nginx:8080/stub_status"
+    depends_on:
+      nginx:
+        condition: service_healthy
+    networks:
+      - hotel-monitor-net
+
+  # ----------------------------------------------------------------------------
+  # 13. METRICS POSTGRESQL POSTGRES_EXPORTER
+  # ----------------------------------------------------------------------------
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: hotel_postgres_exporter
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_EXPORTER_PORT:-9187}:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-hotel_admin}:${POSTGRES_PASSWORD:-HotelSecurePassword2026!}@postgres:5432/${POSTGRES_DB:-hotel_booking_db}?sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hotel-backend-net
+      - hotel-monitor-net
+
+# ==============================================================================
+# ĐỊNH NGHĨA MẠNG CÔ LẬP (NETWORK SEGMENTATION)
+# ==============================================================================
+networks:
+  # Mạng cho Reverse Proxy, Frontend SPA và Backend API
+  hotel-frontend-net:
+    name: hotel-frontend-net
+    driver: bridge
+
+  # Mạng bảo mật nội bộ cho CSDL và các dịch vụ truy cập DB trực tiếp
+  hotel-backend-net:
+    name: hotel-backend-net
+    driver: bridge
+
+  # Mạng telemetry chuyên dụng cho Prometheus, Grafana, Loki và các Exporter
+  hotel-monitor-net:
+    name: hotel-monitor-net
+    driver: bridge
+
+# ==============================================================================
+# ĐỊNH NGHĨA PHÂN VÙNG DỮ LIỆU LƯU TRỮ LÂU DÀI (PERSISTENT VOLUMES)
+# ==============================================================================
+volumes:
+  pgdata:
+    name: hotel_pgdata
+  pgadmin_data:
+    name: hotel_pgadmin_data
+  nginx_logs:
+    name: hotel_nginx_logs
+  prometheus_data:
+    name: hotel_prometheus_data
+  grafana_data:
+    name: hotel_grafana_data
+  loki_data:
+    name: hotel_loki_data
+  backend_logs:
+    name: hotel_backend_logs
