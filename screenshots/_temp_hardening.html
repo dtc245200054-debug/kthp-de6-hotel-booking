@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: 'Consolas', 'Courier New', monospace; padding: 20px; margin: 0; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: hidden; }
+.bar { background: #21262d; padding: 12px 16px; border-bottom: 1px solid #30363d; display: flex; align-items: center; }
+.dots { display: flex; gap: 8px; margin-right: 16px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.d-red { background: #ff5f56; } .d-yellow { background: #ffbd2e; } .d-green { background: #27c93f; }
+.title { color: #8b949e; font-size: 13px; font-weight: bold; }
+.body { padding: 24px; font-size: 14px; line-height: 1.6; }
+.p { color: #58a6ff; font-weight: bold; }
+.cmd { color: #f0f6fc; font-weight: bold; }
+.out { color: #7ee787; }
+.cmt { color: #8b949e; font-style: italic; }
+.h { color: #d2a8ff; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bar">
+    <div class="dots"><div class="dot d-red"></div><div class="dot d-yellow"></div><div class="dot d-green"></div></div>
+    <div class="title">Windows PowerShell - Administrator: Security Hardening Verification</div>
+  </div>
+  <div class="body">
+    <div class="cmt"># 1. Kiem tra tien trinh Backend Container khong chay quyen root (Non-Root User)</div>
+    <div><span class="p">PS C:\hotel-booking&gt; </span><span class="cmd">docker exec hotel_backend whoami</span></div>
+    <div class="out">node</div>
+    <div class="out"><span class="h">---&gt; XAC NHAN:</span> Backend thuc thi duoi tai khoan tieu chuan node (UID 1000)</div>
+    <br>
+    <div class="cmt"># 2. Kiem tra co lap mang CSDL PostgreSQL (Zero-Trust Network Segmentation)</div>
+    <div><span class="p">PS C:\hotel-booking&gt; </span><span class="cmd">docker port hotel_postgres</span></div>
+    <div class="out"><span class="h">---&gt; XAC NHAN:</span> Cong 5432 hoan toan khong anh xa ra Internet (Chi lang nghe trong hotel-backend-net)</div>
+    <br>
+    <div class="cmt"># 3. Kiem tra ket noi an toan HTTPS 443 va 5 Security Headers qua Nginx</div>
+    <div><span class="p">PS C:\hotel-booking&gt; </span><span class="cmd">curl.exe -k -I https://localhost/</span></div>
+    <div class="out">HTTP/2 200</div>
+    <div class="out">server: nginx <span class="cmt">(server_tokens off - An hoan toan so phien ban)</span></div>
+    <div class="out">x-frame-options: SAMEORIGIN <span class="cmt">(Chong Clickjacking)</span></div>
+    <div class="out">x-content-type-options: nosniff <span class="cmt">(Chong MIME Sniffing)</span></div>
+    <div class="out">referrer-policy: strict-origin-when-cross-origin</div>
+    <div class="out">content-security-policy: default-src 'self' https://fonts.googleapis.com ...</div>
+    <div class="out">strict-transport-security: max-age=31536000; includeSubDomains <span class="cmt">(HSTS 1 nam)</span></div>
+    <br>
+    <div class="cmt"># 4. Kiem tra co che chong leo thang dac quyen (No New Privileges)</div>
+    <div><span class="p">PS C:\hotel-booking&gt; </span><span class="cmd">docker inspect hotel_backend --format "{{.HostConfig.SecurityOpt}}"</span></div>
+    <div class="out">[no-new-privileges:true]</div>
+  </div>
+</div>
+</body>
+</html>

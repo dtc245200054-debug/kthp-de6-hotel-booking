@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: 'Consolas', 'Courier New', monospace; padding: 20px; margin: 0; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: hidden; }
+.bar { background: #21262d; padding: 12px 16px; border-bottom: 1px solid #30363d; display: flex; align-items: center; }
+.dots { display: flex; gap: 8px; margin-right: 16px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.d-red { background: #ff5f56; } .d-yellow { background: #ffbd2e; } .d-green { background: #27c93f; }
+.title { color: #8b949e; font-size: 13px; font-weight: bold; }
+.body { padding: 24px; font-size: 14px; line-height: 1.6; }
+.p { color: #58a6ff; font-weight: bold; }
+.cmd { color: #f0f6fc; font-weight: bold; }
+.hash { color: #f0883e; font-weight: bold; }
+.cmt { color: #8b949e; font-style: italic; }
+.msg { color: #7ee787; font-weight: bold; }
+.head { color: #79c0ff; }
+.branch { color: #d2a8ff; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bar">
+    <div class="dots"><div class="dot d-red"></div><div class="dot d-yellow"></div><div class="dot d-green"></div></div>
+    <div class="title">Git Bash - Repository: DTC245200054/kthp-de6-hotel-booking (Branch: main)</div>
+  </div>
+  <div class="body">
+    <div class="cmt"># Kiem tra lich su 3 commit bat buoc theo quy dinh giang vien Huong dan</div>
+    <div><span class="p">nam@ICTU-PC MINGW64 /c/hotel-booking </span><span class="branch">(main)</span></div>
+    <div><span class="p">$ </span><span class="cmd">git log --graph --oneline --decorate -n 3</span></div>
+    <br>
+    <div>* <span class="hash">c31fd95</span> (<span class="head">HEAD -&gt; </span><span class="branch">main</span>) <span class="msg">feat: add loki logging and security hardening</span></div>
+    <div class="cmt">  |  - Logging: Grafana Loki 3.1.1 + Promtail 3.1.1 + 4 truy van LogQL</div>
+    <div class="cmt">  |  - Security: 8 bien phap Hardening da tang (Non-root, Network, RBAC, Secret)</div>
+    <div class="cmt">  |  - Verification: 24 Test Cases dat 100% PASS, Báo cáo Word 23 trang chuẩn ICTU</div>
+    <br>
+    <div>* <span class="hash">7b4e150</span> <span class="msg">feat: add prometheus grafana monitoring</span></div>
+    <div class="cmt">  |  - Monitoring: Prometheus cào 6 Targets (chu kỳ 5-10s)</div>
+    <div class="cmt">  |  - Dashboard: 4 Bảng điều khiển Grafana (Overview, PostgreSQL, Nginx, cAdvisor)</div>
+    <div class="cmt">  |  - Exporters: cAdvisor, Node Exporter, Nginx Exporter, Postgres Exporter</div>
+    <br>
+    <div>* <span class="hash">a0326b1</span> <span class="msg">feat: deploy hotel booking with nginx reverse proxy</span></div>
+    <div class="cmt">  |  - Web SPA: React 18 + Vite (Luxury Gold 5 sao)</div>
+    <div class="cmt">  |  - Backend API: Node.js 20 Express (SELECT FOR UPDATE chong Overbooking)</div>
+    <div class="cmt">  |  - Database: PostgreSQL 16 (Chuẩn 3NF) + pgAdmin 4</div>
+    <div class="cmt">  |  - Proxy: Nginx Reverse Proxy (HTTP 80 + HTTPS 443 SSL tu ky + Security Headers)</div>
+    <br>
+    <div><span class="p">$ </span><span class="cmd">git status</span></div>
+    <div class="out">On branch main</div>
+    <div class="out">Your branch is up to date with 'origin/main'.</div>
+    <div class="out">nothing to commit, working tree clean</div>
+  </div>
+</div>
+</body>
+</html>

@@ -45,8 +45,8 @@ const getDashboardStats = async (req, res, next) => {
       SELECT 
         b.id,
         b.booking_code,
-        b.customer_name,
-        b.customer_phone,
+        COALESCE(c.full_name, 'Khách vãng lai') AS customer_name,
+        COALESCE(c.phone, '') AS customer_phone,
         b.check_in_date,
         b.check_out_date,
         b.total_amount,
@@ -56,6 +56,7 @@ const getDashboardStats = async (req, res, next) => {
         r.title AS room_title
       FROM bookings b
       JOIN rooms r ON b.room_id = r.id
+      LEFT JOIN customers c ON b.customer_id = c.id
       ORDER BY b.created_at DESC
       LIMIT 6
     `;

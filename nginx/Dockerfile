@@ -16,8 +16,11 @@ RUN mkdir -p /etc/nginx/certs && \
     -out /etc/nginx/certs/server.crt \
     -subj "/CN=localhost/O=AuroraGrandResort/C=VN"
 
-# Xóa cấu hình mặc định và thêm cấu hình dự án
-RUN rm -f /etc/nginx/conf.d/default.conf
+# Xóa cấu hình mặc định, hủy symlink stdout để Promtail thu thập file log thực tế
+RUN rm -f /etc/nginx/conf.d/default.conf && \
+    rm -f /var/log/nginx/access.log /var/log/nginx/error.log && \
+    touch /var/log/nginx/access.log /var/log/nginx/error.log && \
+    chown -R nginx:nginx /var/log/nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Cổng HTTP (80), HTTPS (443) và cổng stub status (8080)

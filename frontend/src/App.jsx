@@ -65,6 +65,15 @@ export default function App() {
 
   useEffect(() => {
     fetchInitialData();
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['home', 'rooms', 'about', 'amenities', 'lookup', 'admin'].includes(hash)) {
+        setCurrentView(hash);
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
   // Thực thi tìm kiếm/lọc phòng

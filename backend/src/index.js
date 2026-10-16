@@ -17,13 +17,58 @@ const customerRoutes = require('./routes/customerRoutes');
 const app = express();
 const PORT = process.env.BACKEND_PORT || 5000;
 
-// 1. Bảo mật và cấu hình cơ bản
+// 1. Bảo mật và cấu hình cơ bản (Helmet, CORS giới hạn, Rate Limiting)
 app.use(helmet({
   crossOriginResourcePolicy: false, // Cho phép load ảnh và tài nguyên tĩnh
 }));
-app.use(cors());
+
+// CORS giới hạn theo kiến trúc thực tế của hệ thống
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:80', 'https://localhost', 'https://127.0.0.1'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Chặn truy cập bởi chính sách CORS bảo mật'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Giới hạn tần suất request (Rate Limiting) chống Brute-force và DDoS
+let rateLimit;
+try {
+  rateLimit = require('express-rate-limit');
+} catch (e) {}
+
+if (rateLimit) {
+  // Giới hạn chung cho toàn bộ API (tối đa 300 requests / 15 phút)
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 300,
+    message: { success: false, message: 'Quá nhiều yêu cầu từ địa chỉ IP này. Vui lòng thử lại sau 15 phút.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use('/api/', apiLimiter);
+
+  // Giới hạn nghiêm ngặt cho endpoint Đăng nhập nhạy cảm (tối đa 10 lần thử / 15 phút)
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { success: false, message: 'Phát hiện quá nhiều lần đăng nhập không thành công. Tài khoản tạm khóa thử lại sau 15 phút.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use('/api/auth/login', loginLimiter);
+}
 
 // 2. Middleware thu thập Prometheus Metrics & Structured Logs cho Loki (Đã sanitize dữ liệu nhạy cảm)
 app.use(metricsMiddleware);
