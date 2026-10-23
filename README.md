@@ -1,244 +1,245 @@
-# 🏨 HỆ THỐNG ĐẶT PHÒNG KHÁCH SẠN 5 SAO - AURORA GRAND RESORT & SPA
-## HỌC PHẦN: TRIỂN KHAI VÀ QUẢN TRỊ HỆ THỐNG PHẦN MỀM (ĐỀ TÀI 6)
-### TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN & TRUYỀN THÔNG THÁI NGUYÊN (ICTU)
+﻿# ðŸ¨ Há»† THá»NG Äáº¶T PHÃ’NG KHÃCH Sáº N 5 SAO - AURORA GRAND RESORT & SPA
+## Há»ŒC PHáº¦N: TRIá»‚N KHAI VÃ€ QUáº¢N TRá»Š Há»† THá»NG PHáº¦N Má»€M (Äá»€ TÃ€I 6)
+### TRÆ¯á»œNG Äáº I Há»ŒC CÃ”NG NGHá»† THÃ”NG TIN & TRUYá»€N THÃ”NG THÃI NGUYÃŠN (ICTU)
 
-* **Giảng viên hướng dẫn:** ThS. Nguyễn Anh Chuyên
-* **Sinh viên thực hiện:** Trần Phương Nam
-* **Mã số sinh viên (MSSV):** DTC245200054
-* **Lớp:** Công Nghệ Thông Tin-K23A
-* **Địa điểm & Năm thực hiện:** Thái Nguyên - Năm 2026
+* **Giáº£ng viÃªn hÆ°á»›ng dáº«n:** ThS. Nguyá»…n Anh ChuyÃªn
+* **Sinh viÃªn thá»±c hiá»‡n:** Tráº§n PhÆ°Æ¡ng Nam
+* **MÃ£ sá»‘ sinh viÃªn (MSSV):** DTC245200054
+* **Lá»›p:** CÃ´ng Nghá»‡ ThÃ´ng Tin-K23A
+* **Äá»‹a Ä‘iá»ƒm & NÄƒm thá»±c hiá»‡n:** ThÃ¡i NguyÃªn - NÄƒm 2026
 
 ---
 
-## 📌 GIỚI THIỆU TỔNG QUAN
+## ðŸ“Œ GIá»šI THIá»†U Tá»”NG QUAN
 
-Hệ thống Đặt phòng Khách sạn (Aurora Grand Resort & Spa) là một giải pháp hoàn chỉnh từ tầng ứng dụng Client-Server đến tầng hạ tầng container hóa Microservices, đáp ứng tiêu chuẩn khắt khe về **Triển khai (Deployment)**, **Quản trị (Administration)**, **Giám sát hiệu năng (Prometheus & Grafana Monitoring)**, **Quản lý nhật ký tập trung (Loki & Promtail Logging)** và **Gia cố an ninh đa tầng (Security Hardening)**.
+Há»‡ thá»‘ng Äáº·t phÃ²ng KhÃ¡ch sáº¡n (Aurora Grand Resort & Spa) lÃ  má»™t giáº£i phÃ¡p hoÃ n chá»‰nh tá»« táº§ng á»©ng dá»¥ng Client-Server Ä‘áº¿n táº§ng háº¡ táº§ng container hÃ³a Microservices, Ä‘Ã¡p á»©ng tiÃªu chuáº©n kháº¯t khe vá» **Triá»ƒn khai (Deployment)**, **Quáº£n trá»‹ (Administration)**, **GiÃ¡m sÃ¡t hiá»‡u nÄƒng (Prometheus & Grafana Monitoring)**, **Quáº£n lÃ½ nháº­t kÃ½ táº­p trung (Loki & Promtail Logging)** vÃ  **Gia cá»‘ an ninh Ä‘a táº§ng (Security Hardening)**.
 
 > [!WARNING]
-> **THÔNG BÁO VỀ THÔNG TIN ĐĂNG NHẬP VÀ MẬT KHẨU DEMO:**
-> Các tài khoản và mật khẩu cung cấp trong tài liệu này được cấu hình riêng cho **mục đích kiểm thử trong môi trường học tập, chấm điểm và bảo vệ đồ án tại trường**. Trước khi triển khai lên môi trường sản xuất thực tế (Production), quản trị viên bắt buộc phải thay đổi toàn bộ mật khẩu, khóa bí mật JWT và cấp phát chứng chỉ số SSL có thẩm quyền từ Let's Encrypt / DigiCert.
+> **THÃ”NG BÃO Vá»€ THÃ”NG TIN ÄÄ‚NG NHáº¬P VÃ€ Máº¬T KHáº¨U DEMO:**
+> CÃ¡c tÃ i khoáº£n vÃ  máº­t kháº©u cung cáº¥p trong tÃ i liá»‡u nÃ y Ä‘Æ°á»£c cáº¥u hÃ¬nh riÃªng cho **má»¥c Ä‘Ã­ch kiá»ƒm thá»­ trong mÃ´i trÆ°á»ng há»c táº­p, cháº¥m Ä‘iá»ƒm vÃ  báº£o vá»‡ Ä‘á»“ Ã¡n táº¡i trÆ°á»ng**. TrÆ°á»›c khi triá»ƒn khai lÃªn mÃ´i trÆ°á»ng sáº£n xuáº¥t thá»±c táº¿ (Production), quáº£n trá»‹ viÃªn báº¯t buá»™c pháº£i thay Ä‘á»•i toÃ n bá»™ máº­t kháº©u, khÃ³a bÃ­ máº­t JWT vÃ  cáº¥p phÃ¡t chá»©ng chá»‰ sá»‘ SSL cÃ³ tháº©m quyá»n tá»« Let's Encrypt / DigiCert.
 
 ---
 
-## 🌐 DANH MỤC DỊCH VỤ, CỔNG VÀ ĐỊA CHỈ TRUY CẬP
+## ðŸŒ DANH Má»¤C Dá»ŠCH Vá»¤, Cá»”NG VÃ€ Äá»ŠA CHá»ˆ TRUY Cáº¬P
 
-Hệ thống điều phối chính xác 13 container, các cổng công khai được phân bổ không xung đột với các ứng dụng máy chủ khác:
+Há»‡ thá»‘ng Ä‘iá»u phá»‘i chÃ­nh xÃ¡c 13 container, cÃ¡c cá»•ng cÃ´ng khai Ä‘Æ°á»£c phÃ¢n bá»• khÃ´ng xung Ä‘á»™t vá»›i cÃ¡c á»©ng dá»¥ng mÃ¡y chá»§ khÃ¡c:
 
-| Thành phần Dịch vụ | URL Truy cập Thực tế | Tài khoản / Mật khẩu Lab | Vai trò và Trách nhiệm |
+| ThÃ nh pháº§n Dá»‹ch vá»¥ | URL Truy cáº­p Thá»±c táº¿ | TÃ i khoáº£n / Máº­t kháº©u Lab | Vai trÃ² vÃ  TrÃ¡ch nhiá»‡m |
 | :--- | :--- | :--- | :--- |
-| **Website Khách Hàng (Nginx)** | [http://localhost:80](http://localhost:80) | Không yêu cầu | Xem phòng, đặt phòng trực tuyến, tra cứu đơn |
-| **Website Bảo Mật (HTTPS)** | [https://localhost:443](https://localhost:443) | Không yêu cầu | Giao tiếp mã hóa TLS 1.2/1.3, HTTP/2, HSTS |
-| **Trang Quản Trị (Admin Tab)** | [http://localhost:80#admin](http://localhost:80#admin) | `admin` / `admin123`<br>`staff` / `staff123` | Quản lý phòng, đơn đặt phòng, xem khách hàng |
-| **Backend API Healthcheck** | [http://localhost:80/health](http://localhost:80/health) | Không yêu cầu | Báo cáo sức khỏe API, RAM, Uptime, DB latency |
-| **Backend Metrics Endpoint** | [http://localhost:80/metrics](http://localhost:80/metrics) | Không yêu cầu | Chỉ số nghiệp vụ tương thích Prometheus |
-| **Nginx Stub Status** | [http://localhost:8089/stub_status](http://localhost:8089/stub_status) | Không yêu cầu | Thống kê kết nối active/reading/writing Nginx |
-| **pgAdmin 4 (Quản trị CSDL)** | [http://localhost:8082](http://localhost:8082) | `admin@hotel.com`<br>`AdminSecure2026!` | Giao diện đồ họa quản trị CSDL PostgreSQL 16 |
-| **Prometheus Server UI** | [http://localhost:9090](http://localhost:9090) | Không yêu cầu | Cào dữ liệu time-series, kiểm tra 6 Targets |
-| **Grafana Dashboards** | [http://localhost:3001](http://localhost:3001) | `admin` / `admin` | Trực quan hóa 4 dashboards chuyên sâu tự nạp |
-| **Loki Log Server Ready** | [http://localhost:3101/ready](http://localhost:3101/ready) | Không yêu cầu | Kiểm tra trạng thái sẵn sàng của Logging Engine |
-| **cAdvisor Container Metrics** | [http://localhost:8085](http://localhost:8085) | Không yêu cầu | Giám sát CPU, RAM, Network I/O containers |
-| **Node Exporter Host Metrics** | [http://localhost:9100/metrics](http://localhost:9100/metrics) | Không yêu cầu | Chỉ số phần cứng máy chủ vật lý |
-| **Nginx Prometheus Exporter** | [http://localhost:9113/metrics](http://localhost:9113/metrics) | Không yêu cầu | Metrics kết nối Nginx cho Prometheus cào |
-| **PostgreSQL Exporter** | [http://localhost:9187/metrics](http://localhost:9187/metrics) | Không yêu cầu | Metrics giao dịch CSDL cho Prometheus cào |
-| **CSDL PostgreSQL 16** | `localhost:5433` (nội bộ: 5432) | `hotel_admin`<br>`HotelSecurePassword2026!` | CSDL quan hệ chuẩn 3NF, khóa dòng an toàn |
+| **Website KhÃ¡ch HÃ ng (Nginx)** | [http://localhost:80](http://localhost:80) | KhÃ´ng yÃªu cáº§u | Xem phÃ²ng, Ä‘áº·t phÃ²ng trá»±c tuyáº¿n, tra cá»©u Ä‘Æ¡n |
+| **Website Báº£o Máº­t (HTTPS)** | [https://localhost:443](https://localhost:443) | KhÃ´ng yÃªu cáº§u | Giao tiáº¿p mÃ£ hÃ³a TLS 1.2/1.3, HTTP/2, HSTS |
+| **Trang Quáº£n Trá»‹ (Admin Tab)** | [http://localhost:80#admin](http://localhost:80#admin) | `admin` / `admin123`<br>`staff` / `staff123` | Quáº£n lÃ½ phÃ²ng, Ä‘Æ¡n Ä‘áº·t phÃ²ng, xem khÃ¡ch hÃ ng |
+| **Backend API Healthcheck** | [http://localhost:80/health](http://localhost:80/health) | KhÃ´ng yÃªu cáº§u | BÃ¡o cÃ¡o sá»©c khá»e API, RAM, Uptime, DB latency |
+| **Backend Metrics Endpoint** | [http://localhost:80/metrics](http://localhost:80/metrics) | KhÃ´ng yÃªu cáº§u | Chá»‰ sá»‘ nghiá»‡p vá»¥ tÆ°Æ¡ng thÃ­ch Prometheus |
+| **Nginx Stub Status** | [http://localhost:8089/stub_status](http://localhost:8089/stub_status) | KhÃ´ng yÃªu cáº§u | Thá»‘ng kÃª káº¿t ná»‘i active/reading/writing Nginx |
+| **pgAdmin 4 (Quáº£n trá»‹ CSDL)** | [http://localhost:8082](http://localhost:8082) | `admin@hotel.com`<br>`AdminSecure2026!` | Giao diá»‡n Ä‘á»“ há»a quáº£n trá»‹ CSDL PostgreSQL 16 |
+| **Prometheus Server UI** | [http://localhost:9090](http://localhost:9090) | KhÃ´ng yÃªu cáº§u | CÃ o dá»¯ liá»‡u time-series, kiá»ƒm tra 6 Targets |
+| **Grafana Dashboards** | [http://localhost:3001](http://localhost:3001) | `admin` / `admin` | Trá»±c quan hÃ³a 4 dashboards chuyÃªn sÃ¢u tá»± náº¡p |
+| **Loki Log Server Ready** | [http://localhost:3101/ready](http://localhost:3101/ready) | KhÃ´ng yÃªu cáº§u | Kiá»ƒm tra tráº¡ng thÃ¡i sáºµn sÃ ng cá»§a Logging Engine |
+| **cAdvisor Container Metrics** | [http://localhost:8085](http://localhost:8085) | KhÃ´ng yÃªu cáº§u | GiÃ¡m sÃ¡t CPU, RAM, Network I/O containers |
+| **Node Exporter Host Metrics** | [http://localhost:9100/metrics](http://localhost:9100/metrics) | KhÃ´ng yÃªu cáº§u | Chá»‰ sá»‘ pháº§n cá»©ng mÃ¡y chá»§ váº­t lÃ½ |
+| **Nginx Prometheus Exporter** | [http://localhost:9113/metrics](http://localhost:9113/metrics) | KhÃ´ng yÃªu cáº§u | Metrics káº¿t ná»‘i Nginx cho Prometheus cÃ o |
+| **PostgreSQL Exporter** | [http://localhost:9187/metrics](http://localhost:9187/metrics) | KhÃ´ng yÃªu cáº§u | Metrics giao dá»‹ch CSDL cho Prometheus cÃ o |
+| **CSDL PostgreSQL 16** | `localhost:5433` (ná»™i bá»™: 5432) | `hotel_admin`<br>`HotelSecurePassword2026!` | CSDL quan há»‡ chuáº©n 3NF, khÃ³a dÃ²ng an toÃ n |
 
 ---
 
-## 🚀 HƯỚNG DẪN 18 BƯỚC KHỞI CHẠY VÀ VẬN HÀNH TỪ ĐẦU (WINDOWS + DOCKER DESKTOP)
+## ðŸš€ HÆ¯á»šNG DáºªN 18 BÆ¯á»šC KHá»žI CHáº Y VÃ€ Váº¬N HÃ€NH Tá»ª Äáº¦U (WINDOWS + DOCKER DESKTOP)
 
-### Bước 1: Cài đặt Docker Desktop và Git
-1. Tải và cài đặt **Docker Desktop for Windows** phiên bản mới nhất (hỗ trợ WSL2 backend): [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/).
-2. Tải và cài đặt **Git for Windows**: [https://git-scm.com/download/win](https://git-scm.com/download/win).
-3. Khởi động Docker Desktop và đảm bảo biểu tượng Docker ở thanh taskbar hiển thị màu xanh lá cây (**Engine running**).
+### BÆ°á»›c 1: CÃ i Ä‘áº·t Docker Desktop vÃ  Git
+1. Táº£i vÃ  cÃ i Ä‘áº·t **Docker Desktop for Windows** phiÃªn báº£n má»›i nháº¥t (há»— trá»£ WSL2 backend): [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/).
+2. Táº£i vÃ  cÃ i Ä‘áº·t **Git for Windows**: [https://git-scm.com/download/win](https://git-scm.com/download/win).
+3. Khá»Ÿi Ä‘á»™ng Docker Desktop vÃ  Ä‘áº£m báº£o biá»ƒu tÆ°á»£ng Docker á»Ÿ thanh taskbar hiá»ƒn thá»‹ mÃ u xanh lÃ¡ cÃ¢y (**Engine running**).
 
-### Bước 2: Clone repository về máy tính
-Mở terminal **Windows PowerShell** hoặc **Git Bash** và thực thi:
+### BÆ°á»›c 2: Clone repository vá» mÃ¡y tÃ­nh
+Má»Ÿ terminal **Windows PowerShell** hoáº·c **Git Bash** vÃ  thá»±c thi:
 ```powershell
-git clone https://github.com/DTC245200054/kthp-de6-hotel-booking.git
+git clone https://github.com/dtc245200054-debug/kthp-de6-hotel-booking.git
 cd kthp-de6-hotel-booking
 ```
 
-### Bước 3: Tạo tệp cấu hình biến môi trường `.env` từ `.env.example`
+### BÆ°á»›c 3: Táº¡o tá»‡p cáº¥u hÃ¬nh biáº¿n mÃ´i trÆ°á»ng `.env` tá»« `.env.example`
 ```powershell
 Copy-Item .env.example .env
 ```
-*(Nếu trên Linux/Bash: `cp .env.example .env`)*
+*(Náº¿u trÃªn Linux/Bash: `cp .env.example .env`)*
 
-### Bước 4: Thiết lập các mật khẩu an toàn trong tệp `.env`
-Mở tệp `.env` bằng Notepad hoặc VS Code để kiểm tra/chỉnh sửa các tham số an toàn:
+### BÆ°á»›c 4: Thiáº¿t láº­p cÃ¡c máº­t kháº©u an toÃ n trong tá»‡p `.env`
+Má»Ÿ tá»‡p `.env` báº±ng Notepad hoáº·c VS Code Ä‘á»ƒ kiá»ƒm tra/chá»‰nh sá»­a cÃ¡c tham sá»‘ an toÃ n:
 ```env
-# Cấu hình CSDL PostgreSQL
+# Cáº¥u hÃ¬nh CSDL PostgreSQL
 POSTGRES_DB=hotel_booking_db
 POSTGRES_USER=hotel_admin
 POSTGRES_PASSWORD=HotelSecurePassword2026!
 POSTGRES_PORT=5433
 
-# Cấu hình Cổng Dịch vụ
+# Cáº¥u hÃ¬nh Cá»•ng Dá»‹ch vá»¥
 HTTP_PORT=80
 HTTPS_PORT=443
 GRAFANA_PORT=3001
 PGADMIN_PORT=8082
 LOKI_PORT=3101
 
-# Khóa bí mật JWT
+# KhÃ³a bÃ­ máº­t JWT
 JWT_SECRET=super_secret_hotel_jwt_key_2026_dtc245200054
 ```
 
-### Bước 5: Khởi tạo và chạy hệ thống bằng Docker Compose
-Biên dịch image và khởi chạy toàn bộ cụm 13 container trong nền:
+### BÆ°á»›c 5: Khá»Ÿi táº¡o vÃ  cháº¡y há»‡ thá»‘ng báº±ng Docker Compose
+BiÃªn dá»‹ch image vÃ  khá»Ÿi cháº¡y toÃ n bá»™ cá»¥m 13 container trong ná»n:
 ```powershell
 docker compose up -d --build
 ```
 
-### Bước 6: Chờ cơ chế Healthcheck hoàn tất kiểm tra sức khỏe
-Kiểm tra trạng thái container cho tới khi tất cả các dịch vụ đều chuyển sang trạng thái `healthy`:
+### BÆ°á»›c 6: Chá» cÆ¡ cháº¿ Healthcheck hoÃ n táº¥t kiá»ƒm tra sá»©c khá»e
+Kiá»ƒm tra tráº¡ng thÃ¡i container cho tá»›i khi táº¥t cáº£ cÃ¡c dá»‹ch vá»¥ Ä‘á»u chuyá»ƒn sang tráº¡ng thÃ¡i `healthy`:
 ```powershell
 docker compose ps
 ```
-*(Cơ chế `depends_on: { condition: service_healthy }` đảm bảo CSDL sẵn sàng trước khi Backend khởi động, và Backend sẵn sàng trước khi Nginx Reverse Proxy tiếp nhận traffic).*
+*(CÆ¡ cháº¿ `depends_on: { condition: service_healthy }` Ä‘áº£m báº£o CSDL sáºµn sÃ ng trÆ°á»›c khi Backend khá»Ÿi Ä‘á»™ng, vÃ  Backend sáºµn sÃ ng trÆ°á»›c khi Nginx Reverse Proxy tiáº¿p nháº­n traffic).*
 
-### Bước 7: Truy cập Website chính
-Mở trình duyệt truy cập: **[http://localhost/](http://localhost/)**
-* Giao diện Website khách sạn 5 sao Aurora Grand Resort & Spa hiển thị sang trọng với thanh điều hướng, banner chào mừng và danh mục các hạng phòng.
+### BÆ°á»›c 7: Truy cáº­p Website chÃ­nh
+Má»Ÿ trÃ¬nh duyá»‡t truy cáº­p: **[http://localhost/](http://localhost/)**
+* Giao diá»‡n Website khÃ¡ch sáº¡n 5 sao Aurora Grand Resort & Spa hiá»ƒn thá»‹ sang trá»ng vá»›i thanh Ä‘iá»u hÆ°á»›ng, banner chÃ o má»«ng vÃ  danh má»¥c cÃ¡c háº¡ng phÃ²ng.
 
-### Bước 8: Thử tìm phòng và đặt phòng trực tuyến
-1. Trên giao diện trang chủ, duyệt danh mục phòng hoặc sử dụng bộ lọc tìm kiếm.
-2. Bấm vào nút **Đặt phòng ngay** tại phòng 102 (Deluxe King Room).
-3. Nhập thông tin khách hàng:
-   * Họ tên: `Trần Phương Nam`
+### BÆ°á»›c 8: Thá»­ tÃ¬m phÃ²ng vÃ  Ä‘áº·t phÃ²ng trá»±c tuyáº¿n
+1. TrÃªn giao diá»‡n trang chá»§, duyá»‡t danh má»¥c phÃ²ng hoáº·c sá»­ dá»¥ng bá»™ lá»c tÃ¬m kiáº¿m.
+2. Báº¥m vÃ o nÃºt **Äáº·t phÃ²ng ngay** táº¡i phÃ²ng 102 (Deluxe King Room).
+3. Nháº­p thÃ´ng tin khÃ¡ch hÃ ng:
+   * Há» tÃªn: `Tráº§n PhÆ°Æ¡ng Nam`
    * Email: `nam.tp@ictu.edu.vn`
-   * Số điện thoại: `0988112233`
-   * Số CCCD: `019200054321`
-   * Chọn ngày nhận phòng và ngày trả phòng trong tương lai.
-4. Bấm **Xác nhận đặt phòng**: Hệ thống tính toán tổng tiền tại Backend, lưu thông tin vào CSDL PostgreSQL và sinh mã đặt phòng duy nhất dạng `BK-XXXXXX`.
-5. **Kiểm tra chống đặt trùng phòng (Double-Booking Prevention):** Thực hiện đặt lại đúng căn phòng 102 trong cùng khoảng ngày. Hệ thống lập tức trả về thông báo lỗi `409 Conflict: Phòng đã có khách đặt`.
+   * Sá»‘ Ä‘iá»‡n thoáº¡i: `0988112233`
+   * Sá»‘ CCCD: `019200054321`
+   * Chá»n ngÃ y nháº­n phÃ²ng vÃ  ngÃ y tráº£ phÃ²ng trong tÆ°Æ¡ng lai.
+4. Báº¥m **XÃ¡c nháº­n Ä‘áº·t phÃ²ng**: Há»‡ thá»‘ng tÃ­nh toÃ¡n tá»•ng tiá»n táº¡i Backend, lÆ°u thÃ´ng tin vÃ o CSDL PostgreSQL vÃ  sinh mÃ£ Ä‘áº·t phÃ²ng duy nháº¥t dáº¡ng `BK-XXXXXX`.
+5. **Kiá»ƒm tra chá»‘ng Ä‘áº·t trÃ¹ng phÃ²ng (Double-Booking Prevention):** Thá»±c hiá»‡n Ä‘áº·t láº¡i Ä‘Ãºng cÄƒn phÃ²ng 102 trong cÃ¹ng khoáº£ng ngÃ y. Há»‡ thá»‘ng láº­p tá»©c tráº£ vá» thÃ´ng bÃ¡o lá»—i `409 Conflict: PhÃ²ng Ä‘Ã£ cÃ³ khÃ¡ch Ä‘áº·t`.
 
-### Bước 9: Tra cứu đơn đặt phòng và đăng nhập trang Quản trị
-* **Tra cứu khách hàng:** Vào mục [http://localhost/#lookup](http://localhost/#lookup), nhập Mã đặt phòng và Email. Hệ thống yêu cầu khớp cả hai thông tin mới hiển thị chi tiết (bảo vệ quyền riêng tư).
-* **Đăng nhập Quản trị:** Bấm vào tab **Quản trị** trên thanh menu (hoặc [http://localhost/#admin](http://localhost/#admin)):
-  * Tài khoản demo: `admin`
-  * Mật khẩu demo: `admin123`
-  * Kiểm tra chức năng: Quản lý danh mục phòng, xem hồ sơ khách lưu trú (`customers`), cập nhật trạng thái đơn đặt phòng.
+### BÆ°á»›c 9: Tra cá»©u Ä‘Æ¡n Ä‘áº·t phÃ²ng vÃ  Ä‘Äƒng nháº­p trang Quáº£n trá»‹
+* **Tra cá»©u khÃ¡ch hÃ ng:** VÃ o má»¥c [http://localhost/#lookup](http://localhost/#lookup), nháº­p MÃ£ Ä‘áº·t phÃ²ng vÃ  Email. Há»‡ thá»‘ng yÃªu cáº§u khá»›p cáº£ hai thÃ´ng tin má»›i hiá»ƒn thá»‹ chi tiáº¿t (báº£o vá»‡ quyá»n riÃªng tÆ°).
+* **ÄÄƒng nháº­p Quáº£n trá»‹:** Báº¥m vÃ o tab **Quáº£n trá»‹** trÃªn thanh menu (hoáº·c [http://localhost/#admin](http://localhost/#admin)):
+  * TÃ i khoáº£n demo: `admin`
+  * Máº­t kháº©u demo: `admin123`
+  * Kiá»ƒm tra chá»©c nÄƒng: Quáº£n lÃ½ danh má»¥c phÃ²ng, xem há»“ sÆ¡ khÃ¡ch lÆ°u trÃº (`customers`), cáº­p nháº­t tráº¡ng thÃ¡i Ä‘Æ¡n Ä‘áº·t phÃ²ng.
 
-### Bước 10: Mở pgAdmin 4 và kiểm tra cơ sở dữ liệu
-1. Truy cập: **[http://localhost:8082](http://localhost:8082)**
-2. Đăng nhập với:
+### BÆ°á»›c 10: Má»Ÿ pgAdmin 4 vÃ  kiá»ƒm tra cÆ¡ sá»Ÿ dá»¯ liá»‡u
+1. Truy cáº­p: **[http://localhost:8082](http://localhost:8082)**
+2. ÄÄƒng nháº­p vá»›i:
    * Email: `admin@hotel.com`
-   * Mật khẩu: `AdminSecure2026!`
-3. CSDL đã được nạp sẵn qua `pgadmin/servers.json`. Nhấp vào `Hotel Booking Cluster` $\rightarrow$ `hotel_booking_db` $\rightarrow$ `Schemas` $\rightarrow$ `public` $\rightarrow$ `Tables`.
-4. Xem dữ liệu trong các bảng: `rooms`, `customers`, `bookings`, `booking_status_history`.
+   * Máº­t kháº©u: `AdminSecure2026!`
+3. CSDL Ä‘Ã£ Ä‘Æ°á»£c náº¡p sáºµn qua `pgadmin/servers.json`. Nháº¥p vÃ o `Hotel Booking Cluster` $\rightarrow$ `hotel_booking_db` $\rightarrow$ `Schemas` $\rightarrow$ `public` $\rightarrow$ `Tables`.
+4. Xem dá»¯ liá»‡u trong cÃ¡c báº£ng: `rooms`, `customers`, `bookings`, `booking_status_history`.
 
-### Bước 11: Mở Prometheus Server và kiểm tra 6 Targets
-1. Truy cập: **[http://localhost:9090/targets](http://localhost:9090/targets)**
-2. Đảm bảo tất cả 6 Scrape Targets (`prometheus`, `hotel-backend`, `postgres-exporter`, `nginx-exporter`, `cadvisor`, `node-exporter`) đều hiển thị trạng thái màu xanh lá cây **`UP (1/1)`**.
-3. Vào tab **Graph** ([http://localhost:9090/graph](http://localhost:9090/graph)), nhập thử biểu thức PromQL:
+### BÆ°á»›c 11: Má»Ÿ Prometheus Server vÃ  kiá»ƒm tra 6 Targets
+1. Truy cáº­p: **[http://localhost:9090/targets](http://localhost:9090/targets)**
+2. Äáº£m báº£o táº¥t cáº£ 6 Scrape Targets (`prometheus`, `hotel-backend`, `postgres-exporter`, `nginx-exporter`, `cadvisor`, `node-exporter`) Ä‘á»u hiá»ƒn thá»‹ tráº¡ng thÃ¡i mÃ u xanh lÃ¡ cÃ¢y **`UP (1/1)`**.
+3. VÃ o tab **Graph** ([http://localhost:9090/graph](http://localhost:9090/graph)), nháº­p thá»­ biá»ƒu thá»©c PromQL:
    ```promql
    hotel_bookings_total
    ```
-   Bấm Execute để xem tổng số lượt đặt phòng đã được ghi nhận.
+   Báº¥m Execute Ä‘á»ƒ xem tá»•ng sá»‘ lÆ°á»£t Ä‘áº·t phÃ²ng Ä‘Ã£ Ä‘Æ°á»£c ghi nháº­n.
 
-### Bước 12: Mở Grafana, đăng nhập và xem 4 Dashboards
-1. Truy cập: **[http://localhost:3001](http://localhost:3001)**
-2. Đăng nhập với tài khoản: `admin` / `admin`
-3. Điều hướng vào menu **Dashboards**, kiểm tra 4 Dashboards đã được nạp sẵn:
-   * **Hotel System Overview:** Tổng quan 6 targets, doanh thu VNĐ, phòng trống, request rate.
-   * **PostgreSQL Performance:** Hiệu năng DB, Cache hit ratio (> 98%), Active connections.
-   * **Nginx Metrics:** Lưu lượng kết nối active, writing, reading qua Proxy.
-   * **cAdvisor Containers:** Chiếm dụng CPU, RAM của từng container.
+### BÆ°á»›c 12: Má»Ÿ Grafana, Ä‘Äƒng nháº­p vÃ  xem 4 Dashboards
+1. Truy cáº­p: **[http://localhost:3001](http://localhost:3001)**
+2. ÄÄƒng nháº­p vá»›i tÃ i khoáº£n: `admin` / `admin`
+3. Äiá»u hÆ°á»›ng vÃ o menu **Dashboards**, kiá»ƒm tra 4 Dashboards Ä‘Ã£ Ä‘Æ°á»£c náº¡p sáºµn:
+   * **Hotel System Overview:** Tá»•ng quan 6 targets, doanh thu VNÄ, phÃ²ng trá»‘ng, request rate.
+   * **PostgreSQL Performance:** Hiá»‡u nÄƒng DB, Cache hit ratio (> 98%), Active connections.
+   * **Nginx Metrics:** LÆ°u lÆ°á»£ng káº¿t ná»‘i active, writing, reading qua Proxy.
+   * **cAdvisor Containers:** Chiáº¿m dá»¥ng CPU, RAM cá»§a tá»«ng container.
 
-### Bước 13: Tạo một số request để phát sinh log
-Mở PowerShell và chạy đoạn lệnh sau để tạo lưu lượng truy cập:
+### BÆ°á»›c 13: Táº¡o má»™t sá»‘ request Ä‘á»ƒ phÃ¡t sinh log
+Má»Ÿ PowerShell vÃ  cháº¡y Ä‘oáº¡n lá»‡nh sau Ä‘á»ƒ táº¡o lÆ°u lÆ°á»£ng truy cáº­p:
 ```powershell
-# Tạo 20 request thành công (200 OK)
+# Táº¡o 20 request thÃ nh cÃ´ng (200 OK)
 1..20 | ForEach-Object { curl.exe -s -o $null http://localhost/api/rooms }
 
-# Tạo request gọi route không tồn tại (404 Not Found)
+# Táº¡o request gá»i route khÃ´ng tá»“n táº¡i (404 Not Found)
 curl.exe -s http://localhost/api/khong-ton-tai
 
-# Tạo request vi phạm phương thức Nginx (403 Forbidden)
+# Táº¡o request vi pháº¡m phÆ°Æ¡ng thá»©c Nginx (403 Forbidden)
 curl.exe -s -X POST http://localhost/
 ```
 
-### Bước 14: Mở Grafana Explore, chọn Loki và chạy 4 truy vấn LogQL
-1. Truy cập: **[http://localhost:3001/explore](http://localhost:3001/explore)**
-2. Tại mục Data source góc trên bên trái, chọn **Loki**.
-3. Chạy lần lượt 4 câu truy vấn LogQL thực tế:
+### BÆ°á»›c 14: Má»Ÿ Grafana Explore, chá»n Loki vÃ  cháº¡y 4 truy váº¥n LogQL
+1. Truy cáº­p: **[http://localhost:3001/explore](http://localhost:3001/explore)**
+2. Táº¡i má»¥c Data source gÃ³c trÃªn bÃªn trÃ¡i, chá»n **Loki**.
+3. Cháº¡y láº§n lÆ°á»£t 4 cÃ¢u truy váº¥n LogQL thá»±c táº¿:
    * **Xem Access log Nginx:** `{job="nginx"}`
-   * **Tìm lỗi máy chủ 5xx:** `{job="nginx"} | status >= 500`
-   * **Tìm lỗi Backend Node.js:** `{job="backend"} |= "error"`
-   * **Đếm tần suất log trong 5 phút:** `sum(count_over_time({job="nginx"}[5m]))`
+   * **TÃ¬m lá»—i mÃ¡y chá»§ 5xx:** `{job="nginx"} | status >= 500`
+   * **TÃ¬m lá»—i Backend Node.js:** `{job="backend"} |= "error"`
+   * **Äáº¿m táº§n suáº¥t log trong 5 phÃºt:** `sum(count_over_time({job="nginx"}[5m]))`
 
-### Bước 15: Kiểm tra HTTPS cổng 443 và Security Headers
-Chạy lệnh kiểm tra kết nối mã hóa TLS và các tiêu đề bảo mật:
+### BÆ°á»›c 15: Kiá»ƒm tra HTTPS cá»•ng 443 vÃ  Security Headers
+Cháº¡y lá»‡nh kiá»ƒm tra káº¿t ná»‘i mÃ£ hÃ³a TLS vÃ  cÃ¡c tiÃªu Ä‘á» báº£o máº­t:
 ```powershell
 curl.exe -k -I https://localhost/
 ```
-* Bằng chứng hiển thị: Trả về `HTTP/2 200`, `Server: nginx` (ẩn phiên bản), đủ 5 Security Headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Content-Security-Policy`, `Strict-Transport-Security`).
+* Báº±ng chá»©ng hiá»ƒn thá»‹: Tráº£ vá» `HTTP/2 200`, `Server: nginx` (áº©n phiÃªn báº£n), Ä‘á»§ 5 Security Headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Content-Security-Policy`, `Strict-Transport-Security`).
 
-### Bước 16: Kiểm tra các biện pháp Hardening bảo mật
-Chạy các lệnh kiểm tra an ninh hệ thống:
+### BÆ°á»›c 16: Kiá»ƒm tra cÃ¡c biá»‡n phÃ¡p Hardening báº£o máº­t
+Cháº¡y cÃ¡c lá»‡nh kiá»ƒm tra an ninh há»‡ thá»‘ng:
 ```powershell
-# 1. Kiểm tra Non-Root user trong container:
+# 1. Kiá»ƒm tra Non-Root user trong container:
 docker exec hotel_backend whoami
-# Kết quả: node (UID 1000)
+# Káº¿t quáº£: node (UID 1000)
 
-# 2. Kiểm tra Cô lập cổng CSDL:
+# 2. Kiá»ƒm tra CÃ´ láº­p cá»•ng CSDL:
 docker port hotel_postgres
-# Kết quả: Cổng 5432 không bị ánh xạ trực tiếp ra ngoài Internet
+# Káº¿t quáº£: Cá»•ng 5432 khÃ´ng bá»‹ Ã¡nh xáº¡ trá»±c tiáº¿p ra ngoÃ i Internet
 
-# 3. Kiểm tra Chống nâng quyền:
+# 3. Kiá»ƒm tra Chá»‘ng nÃ¢ng quyá»n:
 docker inspect hotel_backend --format "{{.HostConfig.SecurityOpt}}"
-# Kết quả: [no-new-privileges:true]
+# Káº¿t quáº£: [no-new-privileges:true]
 ```
 
-### Bước 17: Dừng hệ thống an toàn mà KHÔNG mất dữ liệu
-Khi kết thúc phiên làm việc, chạy lệnh:
+### BÆ°á»›c 17: Dá»«ng há»‡ thá»‘ng an toÃ n mÃ  KHÃ”NG máº¥t dá»¯ liá»‡u
+Khi káº¿t thÃºc phiÃªn lÃ m viá»‡c, cháº¡y lá»‡nh:
 ```powershell
 docker compose down
 ```
 > [!IMPORTANT]
-> Lệnh `docker compose down` dừng và gỡ bỏ các container nhưng **BẢO LƯU NGUYÊN VẸN toàn bộ 7 Named Volumes** (`postgres_data`, `pgadmin_data`, `prometheus_data`, `grafana_data`, `loki_data`, `nginx_logs`, `backend_logs`). Toàn bộ dữ liệu đặt phòng và tài khoản không bị mất. Tuyệt đối không dùng cờ `-v` nếu không có nhu cầu xóa trắng hệ thống.
+> Lá»‡nh `docker compose down` dá»«ng vÃ  gá»¡ bá» cÃ¡c container nhÆ°ng **Báº¢O LÆ¯U NGUYÃŠN Váº¸N toÃ n bá»™ 7 Named Volumes** (`postgres_data`, `pgadmin_data`, `prometheus_data`, `grafana_data`, `loki_data`, `nginx_logs`, `backend_logs`). ToÃ n bá»™ dá»¯ liá»‡u Ä‘áº·t phÃ²ng vÃ  tÃ i khoáº£n khÃ´ng bá»‹ máº¥t. Tuyá»‡t Ä‘á»‘i khÃ´ng dÃ¹ng cá» `-v` náº¿u khÃ´ng cÃ³ nhu cáº§u xÃ³a tráº¯ng há»‡ thá»‘ng.
 
-### Bước 18: Cách khắc phục các lỗi thường gặp (Troubleshooting Matrix)
-| Hiện tượng lỗi | Nguyên nhân | Cách xử lý nhanh |
+### BÆ°á»›c 18: CÃ¡ch kháº¯c phá»¥c cÃ¡c lá»—i thÆ°á»ng gáº·p (Troubleshooting Matrix)
+| Hiá»‡n tÆ°á»£ng lá»—i | NguyÃªn nhÃ¢n | CÃ¡ch xá»­ lÃ½ nhanh |
 | :--- | :--- | :--- |
-| **`Port 80/443 is already allocated`** | Dịch vụ IIS, Skype hoặc web server khác đang chiếm cổng | Kiểm tra `netstat -ano \| findstr :80`, tắt tiến trình chiếm cổng hoặc đổi `HTTP_PORT=8088` trong `.env`. |
-| **Trình duyệt báo cảnh báo SSL đỏ** | Chứng chỉ số là dạng tự ký (Self-signed) cho môi trường lab | Nhấn **Nâng cao (Advanced)** $\rightarrow$ **Tiếp tục truy cập localhost** (hoặc gõ `thisisunsafe`). |
-| **Backend báo lỗi kết nối CSDL** | CSDL PostgreSQL đang trong giai đoạn chạy script khởi tạo | Chờ 10-15 giây để container PostgreSQL chuyển sang trạng thái `healthy`, Backend sẽ tự động kết nối lại. |
-| **Grafana chưa thấy log trong Explore** | Chưa phát sinh lưu lượng truy cập | Chạy script kiểm thử: `powershell -ExecutionPolicy Bypass -File .\scripts\test-system.ps1` để tự động tạo log. |
+| **`Port 80/443 is already allocated`** | Dá»‹ch vá»¥ IIS, Skype hoáº·c web server khÃ¡c Ä‘ang chiáº¿m cá»•ng | Kiá»ƒm tra `netstat -ano \| findstr :80`, táº¯t tiáº¿n trÃ¬nh chiáº¿m cá»•ng hoáº·c Ä‘á»•i `HTTP_PORT=8088` trong `.env`. |
+| **TrÃ¬nh duyá»‡t bÃ¡o cáº£nh bÃ¡o SSL Ä‘á»** | Chá»©ng chá»‰ sá»‘ lÃ  dáº¡ng tá»± kÃ½ (Self-signed) cho mÃ´i trÆ°á»ng lab | Nháº¥n **NÃ¢ng cao (Advanced)** $\rightarrow$ **Tiáº¿p tá»¥c truy cáº­p localhost** (hoáº·c gÃµ `thisisunsafe`). |
+| **Backend bÃ¡o lá»—i káº¿t ná»‘i CSDL** | CSDL PostgreSQL Ä‘ang trong giai Ä‘oáº¡n cháº¡y script khá»Ÿi táº¡o | Chá» 10-15 giÃ¢y Ä‘á»ƒ container PostgreSQL chuyá»ƒn sang tráº¡ng thÃ¡i `healthy`, Backend sáº½ tá»± Ä‘á»™ng káº¿t ná»‘i láº¡i. |
+| **Grafana chÆ°a tháº¥y log trong Explore** | ChÆ°a phÃ¡t sinh lÆ°u lÆ°á»£ng truy cáº­p | Cháº¡y script kiá»ƒm thá»­: `powershell -ExecutionPolicy Bypass -File .\scripts\test-system.ps1` Ä‘á»ƒ tá»± Ä‘á»™ng táº¡o log. |
 
 ---
 
-## 🧪 CHẠY BỘ KIỂM THỬ TỰ ĐỘNG TOÀN DIỆN (24 TEST CASES)
+## ðŸ§ª CHáº Y Bá»˜ KIá»‚M THá»¬ Tá»° Äá»˜NG TOÃ€N DIá»†N (24 TEST CASES)
 
-Hệ thống tích hợp sẵn kịch bản kiểm thử tự động toàn diện kiểm tra mọi tiêu chí nghiệp vụ và an ninh:
+Há»‡ thá»‘ng tÃ­ch há»£p sáºµn ká»‹ch báº£n kiá»ƒm thá»­ tá»± Ä‘á»™ng toÃ n diá»‡n kiá»ƒm tra má»i tiÃªu chÃ­ nghiá»‡p vá»¥ vÃ  an ninh:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\test-system.ps1
 ```
-*(Kỳ vọng: **24 PASS, 0 FAIL** - Đạt 100% tỷ lệ thành công).*
+*(Ká»³ vá»ng: **24 PASS, 0 FAIL** - Äáº¡t 100% tá»· lá»‡ thÃ nh cÃ´ng).*
 
 ---
 
-## 📦 KẾ HOẠCH 3 COMMIT BẮT BUỘC TRÊN GITHUB
+## ðŸ“¦ Káº¾ HOáº CH 3 COMMIT Báº®T BUá»˜C TRÃŠN GITHUB
 
-Nhánh `main` của dự án được tổ chức với đúng 3 commit chính thức:
+NhÃ¡nh `main` cá»§a dá»± Ã¡n Ä‘Æ°á»£c tá»• chá»©c vá»›i Ä‘Ãºng 3 commit chÃ­nh thá»©c:
 * **Commit 1 (`a0326b1`):** `feat: deploy hotel booking with nginx reverse proxy`
 * **Commit 2 (`7b4e150`):** `feat: add prometheus grafana monitoring`
 * **Commit 3 (`57f9673`):** `feat: add loki logging and security hardening`
 
-### Hướng dẫn đẩy lên GitHub cá nhân mang MSSV:
+### HÆ°á»›ng dáº«n Ä‘áº©y lÃªn GitHub cÃ¡ nhÃ¢n mang MSSV:
 ```powershell
-git remote add origin https://github.com/DTC245200054/kthp-de6-hotel-booking.git
+git remote add origin https://github.com/dtc245200054-debug/kthp-de6-hotel-booking.git
 git branch -M main
 git push -u origin main
 ```
 
 ---
 
-## 📄 TÀI LIỆU VÀ BÁO CÁO ĐÍNH KÈM
+## ðŸ“„ TÃ€I LIá»†U VÃ€ BÃO CÃO ÄÃNH KÃˆM
 
-1. **Báo cáo Word chính thức chuẩn Đại học ICTU ($\ge$ 23 trang):** [`BAO_CAO_KTHP_DE6_KHACH_SAN.docx`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/BAO_CAO_KTHP_DE6_KHACH_SAN.docx)
-2. **Kịch bản Trình diễn & Bằng chứng Bảo vệ (Demo Checklist):** [`docs/demo-checklist.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/demo-checklist.md)
-3. **Đặc tả Gia cố Bảo mật (Security Hardening):** [`docs/security-hardening.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/security-hardening.md)
-4. **Bản Markdown của Báo cáo KTHP:** [`docs/bao-cao.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/bao-cao.md)
+1. **BÃ¡o cÃ¡o Word chÃ­nh thá»©c chuáº©n Äáº¡i há»c ICTU ($\ge$ 23 trang):** [`BAO_CAO_KTHP_DE6_KHACH_SAN.docx`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/BAO_CAO_KTHP_DE6_KHACH_SAN.docx)
+2. **Ká»‹ch báº£n TrÃ¬nh diá»…n & Báº±ng chá»©ng Báº£o vá»‡ (Demo Checklist):** [`docs/demo-checklist.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/demo-checklist.md)
+3. **Äáº·c táº£ Gia cá»‘ Báº£o máº­t (Security Hardening):** [`docs/security-hardening.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/security-hardening.md)
+4. **Báº£n Markdown cá»§a BÃ¡o cÃ¡o KTHP:** [`docs/bao-cao.md`](file:///c:/Users/NAM/Documents/h%E1%BB%87%20th%E1%BB%91ng%20%C4%91%E1%BA%B7t%20ph%C3%B2ng%20kh%C3%A1ch%20s%E1%BA%A1n-kthp/docs/bao-cao.md)
+
